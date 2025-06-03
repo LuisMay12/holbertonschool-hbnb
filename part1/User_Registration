@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant User
+    participant API
+    participant BusinessLogic
+    participant Database
+
+    User->>API: POST /api/v1/users {"email": "...", "password": "..."}
+    API->>BusinessLogic: validate_input(data)
+    BusinessLogic->>BusinessLogic: create_user_instance()
+    BusinessLogic->>Database: save_user(user)
+    Database-->>BusinessLogic: user_id
+    BusinessLogic-->>API: return created user data
+    API-->>User: 201 Created + user info
