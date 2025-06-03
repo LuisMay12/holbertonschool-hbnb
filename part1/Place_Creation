@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant User
+    participant API
+    participant BusinessLogic
+    participant Database
+
+    User->>API: POST /api/v1/places {"name": "...", "user_id": "..."}
+    API->>BusinessLogic: validate_place_data(data)
+    BusinessLogic->>BusinessLogic: create_place_instance()
+    BusinessLogic->>Database: save_place(place)
+    Database-->>BusinessLogic: confirmation
+    BusinessLogic-->>API: place info
+    API-->>User: 201 Created + place data
