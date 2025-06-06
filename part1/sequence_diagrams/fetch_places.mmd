@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant User
+    participant API
+    participant Business
+    participant DB
+
+    User->>API: GET /places?min_price=50&amenities=wifi
+    API->>Business: build_filters(params)
+    Business->>DB: query_places(filters)
+    DB-->>Business: [place1, place2]
+    Business->>Business: serialize()
+    Business-->>API: json_data
+    API-->>User: 200 OK + results

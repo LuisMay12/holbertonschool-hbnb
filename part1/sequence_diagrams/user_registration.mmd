@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant User as Client
+    participant API as APIService
+    participant Business as Facade
+    participant Database as DBStorage
+
+    User->>API: POST /users {name, email, password}
+    API->>Business: validate_user_data(input)
+    Business->>Business: create_user()
+    Business->>Database: save(user)
+    Database-->>Business: saved_user
+    Business-->>API: User object
+    API-->>User: 201 Created + user_json

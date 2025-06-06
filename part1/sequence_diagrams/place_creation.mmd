@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant Owner
+    participant API
+    participant Business
+    participant DB
+
+    Owner->>API: POST /places {title, price, amenities}
+    API->>Business: verify_owner(owner_id)
+    Business->>DB: get_user(owner_id)
+    DB-->>Business: owner_data
+    Business->>Business: validate_price(price)
+    Business->>DB: save_place()
+    DB-->>Business: place_id
+    Business-->>API: place_object
+    API-->>Owner: 201 Created + place_json

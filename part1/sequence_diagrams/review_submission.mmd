@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant Guest
+    participant API
+    participant Business
+    participant DB
+
+    Guest->>API: POST /places/123/reviews {rating:5, text}
+    API->>Business: validate_review(place_id, guest_id)
+    Business->>DB: get_booking(guest_id, place_id)
+    DB-->>Business: booking_exists?
+    Business->>Business: create_review()
+    Business->>DB: save(review)
+    DB-->>Business: review_id
+    Business-->>API: success
+    API-->>Guest: 201 Created
