@@ -6,7 +6,7 @@ This phase focuses on the implementation of the core layers of the HBnB applicat
 
 ---
 
-## ✅ Objectives
+## Objectives
 
 By the end of this part, the following outcomes should be achieved:
 
@@ -19,7 +19,7 @@ By the end of this part, the following outcomes should be achieved:
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 part2/
@@ -39,9 +39,9 @@ part2/
 
 ---
 
-## 🧠 Key Concepts
+## Key Concepts
 
-### 🔸 Business Logic Implementation
+### Business Logic Implementation
 - Entities include necessary attributes (e.g., `id`, `created_at`, `updated_at`) and domain-specific behaviors.
 - Relationships: 
   - User owns Places
@@ -49,7 +49,7 @@ part2/
   - Places and Reviews are linked
   - User writes Reviews
 
-### 🔸 RESTful API Design
+### RESTful API Design
 - Endpoints follow standard REST conventions.
 - CRUD operations implemented:
   - Users: `POST`, `GET`, `PUT`
@@ -57,25 +57,25 @@ part2/
   - Places: `POST`, `GET`, `PUT`
   - Reviews: `POST`, `GET`, `PUT`, `DELETE`
 
-### 🔸 Facade Pattern
+### Facade Pattern
 - The `hbnb_facade.py` module simplifies the interface between the API and the business logic by centralizing service access.
 
-### 🔸 Data Serialization
+### Data Serialization
 - Extended responses include nested fields, such as:
   - When retrieving a Place, include `owner.first_name`, `owner.last_name`, and a list of `amenities`.
 
 ---
 
-## 🔍 Testing and Validation
+## Testing and Validation
 
-- ✅ Manual testing using `cURL` and Swagger UI
-- ✅ Input validation and error handling
-- ✅ Black-box testing of endpoints
-- ✅ Tests documented in the testing report
+- Manual testing using `cURL` and Swagger UI
+- Input validation and error handling
+- Black-box testing of endpoints
+- Tests documented in the testing report
 
 ---
 
-## 🔧 Tech Stack
+## Tech Stack
 
 - Python 3.10+
 - Flask
@@ -85,7 +85,7 @@ part2/
 
 ---
 
-## 📎 Next Steps (Part 3 Preview)
+## Next Steps (Part 3 Preview)
 
 - Integrate SQLAlchemy as the full persistence layer.
 - Implement JWT-based authentication.
@@ -93,7 +93,7 @@ part2/
 
 ---
 
-## 📝 Resources
+## Resources
 
 - [Flask Documentation](https://flask.palletsprojects.com/en/stable/)
 - [Flask-RESTx Docs](https://flask-restx.readthedocs.io/en/latest/)
