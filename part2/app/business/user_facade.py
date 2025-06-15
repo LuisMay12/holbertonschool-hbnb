@@ -1,32 +1,39 @@
-from app.persistence.repository import memory_repository
-from app.persistence.models.user import user
+from datetime import datetime
+from models.user import User
 
-class UserFacade:
-    def __init__(self):
-        self.repo = memory_repository
-
-    def create_user(self, data):
-        user = User(
-            email=data.get("email")
-            password=data.get("password")
-            first_name=data.get("first_name", "")
-            last_name=data.get("last_name", "")
-        )
-        self.repo.save("User", user)
-        return user
-
-    def get_user(self, user_id):
-        return self.repo.get("User", user_id)
+class HBnBFacade:
+    def __init__(self, storage):
+        self._storage = storage
 
     def get_all_users(self):
-        return self.repo.all("User")
+        return list(self._storage.all(User).values())
 
-    def update_user(self, user_id, updates):
-        user = self.repo.get("user", user_id)
+    def get_user(self, user_id):
+        return self._storage.get(User, user_id)
+
+    def get_user_by_email(self, email):
+        users = self._storage.all(User)
+        for user in users.values():
+            if user.email == email:
+                return user
+        return None
+
+    def create_user(self, first_name, last_name, email, password):
+        user = User(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=password
+        )
+        self._storage.add(user)
+        return user
+
+    def update_user(self, user_id, **kwargs):
+        user = self.get_user(user_id)
         if not user:
             return None
-        for key in ["fist_name", "last_name", "email", "password"]:
-            if key in updates:
-                setattr(user, key, updates[key])
-        user.update_timestamp()
+        for key, value in kwargs.items():
+            if value is not None and hasattr(user, key):
+                setattr(user, key, value)
+        user.updated_at = datetime.utcnow()
         return user
