@@ -3,9 +3,12 @@ from flask_restx import Api
 
 def create_app():
     app = Flask(__name__)
-    api = Api(app, version='1.0', title='HBnb Application Api', doc='/api/v1/')
-
-    # Placeholder for Api namespaces (serán agregados más tarde)
-    # Adiditional namespaces for places, reviews, and amenities will be added later
-
+    
+    # Configuraciones iniciales
+    app.config.from_object('config.config')
+    
+    # Inicializar API v1
+    from app.api.v1 import init_app as init_api_v1
+    init_api_v1(app)
+    
     return app
