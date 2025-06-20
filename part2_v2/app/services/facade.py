@@ -75,7 +75,7 @@ class HBNBFacade:
         return self.place_repo.get(place_id)
 
     def get_places_by_user(self, user_id):
-       	"""Obtiene todos los alojamientos de un usuario"""
+        """Obtiene todos los alojamientos de un usuario"""
         return [p for p in self.place_repo.get_all() if p.user_id == user_id]
 
    	# ==================== REVIEW METHODS ====================

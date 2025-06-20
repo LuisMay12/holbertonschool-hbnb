@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from app.services.hbnb_facade import HBNBFacade
+from ..services.facade import HBNBFacade
 
 api_bp = Blueprint("api", __name__)
 facade = HBNBFacade()

@@ -1,1 +1,1 @@
-from .facade import facade
+from .facade import HBNBFacade

@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask_restx import Api
-from .users import api as users_ns
+from .v1.users import api as users_ns
+from .v1.amenities import api as amenities_ns
 
 # Configuración del Blueprint y API
 blueprint = Blueprint('api_v1', __name__, url_prefix='/api/v1')
@@ -10,8 +11,9 @@ api = Api(blueprint,
           description='Holiday Homes Booking API',
           doc='/doc/')  # Opcional: habilita la documentación Swagger UI
 
-# Registrar namespaces
+# namespaces
 api.add_namespace(users_ns)
+api.add_namespace(amenities_ns)
 
 def init_app(app):
     """Función de inicialización para registrar el blueprint en la app Flask"""
