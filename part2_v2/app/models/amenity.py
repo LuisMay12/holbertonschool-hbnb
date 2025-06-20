@@ -1,10 +1,9 @@
 from .base_model import BaseModel
 
 class Amenity(BaseModel):
-    """Modelo de comodidad con validación básica"""
     
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__()
         self.name = kwargs.get('name', '')
         
         self.validate()

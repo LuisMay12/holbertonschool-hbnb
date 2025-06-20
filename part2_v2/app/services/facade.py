@@ -26,6 +26,9 @@ class HBNBFacade:
 
     def create_user(self, email, first_name, last_name, password='', is_admin=False):
         """Create new user with validation"""
+        if self.user_repo.get_by_attribute('email', email):
+            raise ValueError("Email is already in use")
+
         user = User(
         email=email,
         first_name=first_name,
@@ -55,12 +58,16 @@ class HBNBFacade:
         if user:
             user.update(kwargs)
             self.user_repo.update(user.id, user.__dict__)
-        if not user:
+        else:
             raise ValueError("User not found")	
 
     # ==================== PLACE METHODS ====================
     def create_place(self, user_id, name, description, **kwargs):
         """Crea un nuevo alojamiento"""
+
+        if not (self.user_repo.get(user_id)):
+            raise ValueError("Owner (user) does not exist")
+        
         place = Place(
             user_id=user_id,
             name=name,
@@ -81,11 +88,11 @@ class HBNBFacade:
    	# ==================== REVIEW METHODS ====================
     def create_review(self, user_id, place_id, text, rating):
         """Crea una nueva reseña con validación de relaciones"""
-        # Validación de existencia (nuevo)
+        # Validación de existencia
         if not (self.user_repo.get(user_id) and self.place_repo.get(place_id)):
             raise ValueError("User or Place does not exist")
     
-        # Validación de rating (nuevo)
+        # Validación de rating
         if not 1 <= rating <= 5:
             raise ValueError("Rating must be between 1 and 5")
 
@@ -97,13 +104,13 @@ class HBNBFacade:
         )
         self.review_repo.add(review)
     
-    # Actualización bidireccional (nuevo)
         place = self.place_repo.get(place_id)
         if not hasattr(place, 'review_ids'):
             place.review_ids = []
-            place.review_ids.append(review.id)
-            self.place_repo.update(place.id, place.__dict__)
-            return review
+    
+        place.review_ids.append(review.id)
+        self.place_repo.update(place.id, place.__dict__)
+        return review
 
     def get_reviews_for_place(self, place_id):
         """Obtiene reseñas de un alojamiento (mantener existente)"""

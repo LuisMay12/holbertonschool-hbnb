@@ -4,11 +4,11 @@ class Review(BaseModel):
     """Modelo de reseña con validación de rating"""
     
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__()
         self.text = kwargs.get('text', '')
         self.rating = kwargs.get('rating', 0)
-        self.place_id = kwargs.get('place_id', '')  # Relación con Place
-        self.user_id = kwargs.get('user_id', '')  # Relación con User
+        self.place_id = kwargs.get('place_id', '')
+        self.user_id = kwargs.get('user_id', '')
         
         self.validate()
 

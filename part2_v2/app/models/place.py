@@ -19,6 +19,9 @@ class Place(BaseModel):
 
     def validate(self):
         """Valida atributos numéricos"""
+        if not self.title:
+            raise ValueError("Title is required")
+
         if len(self.title) > 100:
             raise ValueError("Title must be ≤ 100 characters")
             

@@ -9,7 +9,7 @@ api = Api(blueprint,
           title='HBnB API',
           version='1.0',
           description='Holiday Homes Booking API',
-          doc='/doc/')  # Opcional: habilita la documentación Swagger UI
+          doc='/doc/')
 
 # namespaces
 api.add_namespace(users_ns)
