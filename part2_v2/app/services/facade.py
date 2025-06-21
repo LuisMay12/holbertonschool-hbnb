@@ -62,28 +62,96 @@ class HBNBFacade:
             raise ValueError("User not found")	
 
     # ==================== PLACE METHODS ====================
-    def create_place(self, user_id, name, description, **kwargs):
-        """Crea un nuevo alojamiento"""
-
-        if not (self.user_repo.get(user_id)):
+    def create_place(self, place_data):
+        """Crea un nuevo lugar con validación de datos y relaciones"""
+        owner_id = place_data.get('owner_id')
+        if not self.user_repo.get(owner_id):
             raise ValueError("Owner (user) does not exist")
-        
-        place = Place(
-            user_id=user_id,
-            name=name,
-            description=description,
-            **kwargs
-        )
-        self.place_repo.add(place)
-        return place
+
+        # Validar amenities
+        amenity_ids = place_data.get("amenities", [])
+        for aid in amenity_ids:
+            if not self.amenity_repo.get(aid):
+                raise ValueError(f"Amenity {aid} does not exist")
+
+        try:
+            place = Place(
+                title=place_data.get('title'),
+                description=place_data.get('description', ''),
+                price=place_data.get('price'),
+                latitude=place_data.get('latitude'),
+                longitude=place_data.get('longitude'),
+                owner_id=owner_id,
+                amenity_ids=amenity_ids
+            )
+            self.place_repo.add(place)
+            return place
+        except Exception as e:
+            raise ValueError(str(e))
+
 
     def get_place(self, place_id):
-        """Obtiene un alojamiento por ID"""
-        return self.place_repo.get(place_id)
+        """Devuelve un lugar con owner y amenities anidados"""
+        place = self.place_repo.get(place_id)
+        if not place:
+            return None
 
-    def get_places_by_user(self, user_id):
-        """Obtiene todos los alojamientos de un usuario"""
-        return [p for p in self.place_repo.get_all() if p.user_id == user_id]
+        # Anidar owner
+        place.owner = self.user_repo.get(place.owner_id)
+
+        # Anidar amenities
+        place.amenities = [
+            self.amenity_repo.get(aid) for aid in getattr(place, 'amenity_ids', [])
+            if self.amenity_repo.get(aid)
+        ]
+        return place
+
+
+    def get_all_places(self):
+        """Devuelve todos los lugares con owner y amenities anidados"""
+        places = self.place_repo.get_all()
+        for place in places:
+            place.owner = self.user_repo.get(place.owner_id)
+            place.amenities = [
+                self.amenity_repo.get(aid) for aid in getattr(place, 'amenity_ids', [])
+                if self.amenity_repo.get(aid)
+            ]
+        return places
+
+    
+    def update_place(self, place_id, place_data):
+        """Actualiza campos propios de un lugar (sin amenities)"""
+        place = self.place_repo.get(place_id)
+        if not place:
+            raise ValueError("Place not found")
+
+        allowed_fields = ['title', 'description', 'price', 'latitude', 'longitude', 'owner_id']
+        updates = {k: v for k, v in place_data.items() if k in allowed_fields and v is not None}
+
+        if 'price' in updates and updates['price'] < 0:
+            raise ValueError("Invalid price")
+        if 'latitude' in updates and not (-90 <= updates['latitude'] <= 90):
+            raise ValueError("Invalid latitude")
+        if 'longitude' in updates and not (-180 <= updates['longitude'] <= 180):
+            raise ValueError("Invalid longitude")
+
+        if 'owner_id' in updates and not self.user_repo.get(updates['owner_id']):
+            raise ValueError("Owner not found")
+
+        # Aplicar cambios
+        for key, value in updates.items():
+            setattr(place, key, value)
+        
+        place.validate()
+
+        self.place_repo.update(place.id, place.__dict__)
+        return place
+
+
+    # def get_places_by_user(self, user_id): # maybe it is not needed
+    #     """Obtiene todos los alojamientos de un usuario"""
+    #     return [p for p in self.place_repo.get_all() if p.user_id == user_id]
+
 
    	# ==================== REVIEW METHODS ====================
     def create_review(self, user_id, place_id, text, rating):

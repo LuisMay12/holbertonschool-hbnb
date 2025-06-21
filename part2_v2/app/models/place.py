@@ -18,7 +18,7 @@ class Place(BaseModel):
         self.validate()
 
     def validate(self):
-        """Valida atributos numéricos"""
+        """Valida atributos"""
         if not self.title:
             raise ValueError("Title is required")
 
