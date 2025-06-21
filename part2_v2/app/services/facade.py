@@ -154,35 +154,89 @@ class HBNBFacade:
 
 
    	# ==================== REVIEW METHODS ====================
-    def create_review(self, user_id, place_id, text, rating):
-        """Crea una nueva reseña con validación de relaciones"""
-        # Validación de existencia
+    def create_review(self, review_data):
+        """Creates a new review with validation for user and place existence"""
+        user_id = review_data.get('user_id')
+        place_id = review_data.get('place_id')
+        text = review_data.get('text')
+        rating = review_data.get('rating')
+
         if not (self.user_repo.get(user_id) and self.place_repo.get(place_id)):
             raise ValueError("User or Place does not exist")
-    
-        # Validación de rating
-        if not 1 <= rating <= 5:
-            raise ValueError("Rating must be between 1 and 5")
 
+        # Let the model handle validation
         review = Review(
             user_id=user_id,
             place_id=place_id,
             text=text,
             rating=rating
         )
+
         self.review_repo.add(review)
-    
+
+        # Update place to include the review ID
         place = self.place_repo.get(place_id)
         if not hasattr(place, 'review_ids'):
             place.review_ids = []
-    
         place.review_ids.append(review.id)
         self.place_repo.update(place.id, place.__dict__)
+
         return review
 
-    def get_reviews_for_place(self, place_id):
-        """Obtiene reseñas de un alojamiento (mantener existente)"""
-        return [r for r in self.review_repo.get_all() if r.place_id == place_id] 
+
+    def get_review(self, review_id):
+        """Retrieves a review by ID"""
+        return self.review_repo.get(review_id)
+
+
+    def get_all_reviews(self):
+        """Returns all reviews"""
+        return self.review_repo.get_all()
+
+
+    def get_reviews_by_place(self, place_id):
+        """Returns all reviews for a specific place"""
+        place = self.place_repo.get(place_id)
+        if not place:
+            raise ValueError("Place not found")
+        return [r for r in self.review_repo.get_all() if r.place_id == place_id]
+
+
+    def update_review(self, review_id, review_data):
+        """Updates text and/or rating of a review"""
+        review = self.review_repo.get(review_id)
+        if not review:
+            raise ValueError("Review not found")
+
+        allowed_fields = ['text', 'rating']
+        updates = {k: v for k, v in review_data.items() if k in allowed_fields and v is not None}
+
+        if 'text' in updates:
+            review.text = updates['text']
+        if 'rating' in updates:
+            if not 1 <= updates['rating'] <= 5:
+                raise ValueError("Rating must be between 1 and 5")
+            review.rating = updates['rating']
+
+        review.validate()
+        self.review_repo.update(review.id, review.__dict__)
+        return review
+
+
+    def delete_review(self, review_id):
+        """Deletes a review and removes it from the related place"""
+        review = self.review_repo.get(review_id)
+        if not review:
+            raise ValueError("Review not found")
+
+        self.review_repo.delete(review_id)
+
+        # Clean up reference in the place
+        place = self.place_repo.get(review.place_id)
+        if place and hasattr(place, 'review_ids') and review_id in place.review_ids:
+            place.review_ids.remove(review_id)
+            self.place_repo.update(place.id, place.__dict__)
+
 	
     # ==================== AMENITY METHODS ====================
     def create_amenity(self, name):
