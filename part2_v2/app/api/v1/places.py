@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import hbnb_facade
 
-api = Namespace('Places', description='Place operations', path='/api/v1/places')
+api = Namespace('Places', description='Place operations', path='/places')
 
 # Define the models for related entities
 amenity_model = api.model('PlaceAmenity', {

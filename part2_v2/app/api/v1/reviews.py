@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import hbnb_facade
 
-api = Namespace('reviews', description='Review operations', path='/api/v1/reviews')
+api = Namespace('reviews', description='Review operations', path='/reviews')
 
 # Input model for validation
 review_model = api.model('Review', {

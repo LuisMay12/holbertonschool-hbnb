@@ -2,7 +2,7 @@ from flask_restx import Namespace, Resource, fields
 from app.services.facade import hbnb_facade
 from app.models.user import User
 
-api = Namespace('Users', description='User operations', path='/api/v1/users')
+api = Namespace('Users', description='User operations', path='/users')
 
 # Modelo para documentación Swagger
 user_model = api.model('User', {

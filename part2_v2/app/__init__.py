@@ -8,7 +8,7 @@ def create_app():
     app.config.from_object('config.config')
     
     # Inicializar API v1
-    from app.api.v1 import init_app as init_api_v1
+    from app.api import init_app as init_api_v1
     init_api_v1(app)
     
     return app

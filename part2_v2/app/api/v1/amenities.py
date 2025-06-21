@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import hbnb_facade
 
-api = Namespace('Amenities', description='Operaciones de comodidades', path='/api/v1/amenities')
+api = Namespace('Amenities', description='Amenities operations', path='/amenities')
 
 # Modelo para documentación Swagger
 amenity_model = api.model('Amenity', {
@@ -13,14 +13,14 @@ amenity_model = api.model('Amenity', {
 class AmenityList(Resource):
     @api.marshal_list_with(amenity_model)
     def get(self):
-        """Lista todas las comodidades"""
+        """List of all amenities"""
         return hbnb_facade.get_all_amenities()
 
     @api.expect(amenity_model, validate=True)
     @api.marshal_with(amenity_model, code=201)
     @api.response(400, 'Nombre inválido o duplicado')
     def post(self):
-        """Crea una nueva comodidad"""
+        """Register a new amenity"""
         data = api.payload
         
         # Validación de nombre único
@@ -39,7 +39,7 @@ class AmenityResource(Resource):
     @api.marshal_with(amenity_model)
     @api.response(404, 'Comodidad no encontrada')
     def get(self, amenity_id):
-        """Obtiene una comodidad por ID"""
+        """Retrieve an amenity by ID"""
         amenity = hbnb_facade.get_amenity(amenity_id)
         if not amenity:
             api.abort(404, 'Comodidad no encontrada')
@@ -50,7 +50,7 @@ class AmenityResource(Resource):
     @api.response(400, 'Nombre inválido')
     @api.response(404, 'Comodidad no encontrada')
     def put(self, amenity_id):
-        """Actualiza una comodidad"""
+        """Update an amenity's information"""
         data = api.payload
         try:
             hbnb_facade.update_amenity(
