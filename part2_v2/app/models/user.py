@@ -11,7 +11,7 @@ class User(BaseModel):
         self.email = kwargs.get('email', '')
         self.is_admin = kwargs.get('is_admin', False)
         
-        # Validaciones iniciales
+        # Initials validations
         self.validate()
 
     def validate(self):

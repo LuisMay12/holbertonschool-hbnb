@@ -38,7 +38,7 @@ class HBNBFacade:
         )
         self.user_repo.add(user)
         return user
-        # Solo actualiza campos permitidos
+        # Only allows updated fields
         allowed_fields = ['email', 'first_name', 'last_name', 'is_admin']
         updates = {k: v for k, v in kwargs.items() if k in allowed_fields and v is not None}
         user.update(updates)
@@ -68,7 +68,7 @@ class HBNBFacade:
         if not self.user_repo.get(owner_id):
             raise ValueError("Owner (user) does not exist")
 
-        # Validar amenities
+        # Amenities validation
         amenity_ids = place_data.get("amenities", [])
         for aid in amenity_ids:
             if not self.amenity_repo.get(aid):
@@ -96,10 +96,10 @@ class HBNBFacade:
         if not place:
             return None
 
-        # Anidar owner
+        # owner
         place.owner = self.user_repo.get(place.owner_id)
 
-        # Anidar amenities
+        # nest amenities
         place.amenities = [
             self.amenity_repo.get(aid) for aid in getattr(place, 'amenity_ids', [])
             if self.amenity_repo.get(aid)
@@ -138,7 +138,7 @@ class HBNBFacade:
         if 'owner_id' in updates and not self.user_repo.get(updates['owner_id']):
             raise ValueError("Owner not found")
 
-        # Aplicar cambios
+        # Apply changes
         for key, value in updates.items():
             setattr(place, key, value)
         
@@ -267,5 +267,5 @@ class HBNBFacade:
     
         amenity.name = name
         self.amenity_repo.update(amenity.id, amenity.__dict__)
-# Singleton pattern para el facade
+# Singleton pattern for facade
 hbnb_facade = HBNBFacade()

@@ -76,7 +76,7 @@ class UserResource(Resource):
         """Update user information"""
         data = api.payload
         
-        # Validación de email único si se está actualizando
+        # Email validation if its updated
         if 'email' in data and hbnb_facade.get_user_by_email(data['email']):
             existing = hbnb_facade.get_user_by_email(data['email'])
             if existing.id != user_id:

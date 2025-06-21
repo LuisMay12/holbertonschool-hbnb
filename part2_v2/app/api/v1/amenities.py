@@ -3,7 +3,7 @@ from app.services.facade import hbnb_facade
 
 api = Namespace('Amenities', description='Amenities operations', path='/amenities')
 
-# Modelo para documentación Swagger
+# Swagger documentation model
 amenity_model = api.model('Amenity', {
     'id': fields.String(readonly=True, description='ID único'),
     'name': fields.String(required=True, description='Nombre de la comodidad', max_length=50)

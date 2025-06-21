@@ -9,7 +9,7 @@ class Amenity(BaseModel):
         self.validate()
 
     def validate(self):
-        """Valida el nombre"""
+        """Name Validation"""
         if not self.name:
             raise ValueError("Amenity name is required")
             
