@@ -2,7 +2,7 @@ from .base_model import BaseModel
 import re
 
 class User(BaseModel):
-    """Modelo de usuario con validaciones estrictas"""
+    """User model with strict validations"""
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -15,7 +15,7 @@ class User(BaseModel):
         self.validate()
 
     def validate(self):
-        """Valida los atributos requeridos"""
+        """Validates the required attributes"""
         if not all([self.first_name, self.last_name, self.email]):
             raise ValueError("First name, last name, and email are required")
         

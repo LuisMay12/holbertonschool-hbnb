@@ -2,7 +2,7 @@ from .base_model import BaseModel
 from typing import List
 
 class Place(BaseModel):
-    """Modelo de lugar con relaciones y validaciones geoespaciales"""
+    """Place model with geospatial relationships and validations"""
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -18,7 +18,7 @@ class Place(BaseModel):
         self.validate()
 
     def validate(self):
-        """Valida atributos"""
+        """Validates attributes"""
         if not self.title:
             raise ValueError("Title is required")
 

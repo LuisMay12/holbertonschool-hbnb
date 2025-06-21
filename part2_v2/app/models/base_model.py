@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Dict, Any
 
 class BaseModel:
-    """Clase base con UUID y manejo de timestamps"""
+    """Base class with UUID and timestamp handling"""
     
     def __init__(self, *args, **kwargs):
         self.id = str(uuid.uuid4())
@@ -17,11 +17,11 @@ class BaseModel:
                 setattr(self, key, value)
 
     def save(self):
-        """Actualiza el timestamp de modificación"""
+        """Update the modification timestamp"""
         self.updated_at = datetime.now()
 
     def update(self, data: Dict[str, Any]):
-        """Actualiza atributos con validación"""
+        """Update attributes with validation"""
         for key, value in data.items():
             if hasattr(self, key):
                 setattr(self, key, value)

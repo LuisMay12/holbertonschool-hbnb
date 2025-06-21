@@ -1,7 +1,7 @@
 from .base_model import BaseModel
 
 class Review(BaseModel):
-    """Modelo de reseña con validación de rating"""
+    """Review template with rating validation"""
     
     def __init__(self, *args, **kwargs):
         super().__init__()
@@ -13,7 +13,7 @@ class Review(BaseModel):
         self.validate()
 
     def validate(self):
-        """Valida el rating y texto"""
+        """Validate the rating and text"""
         if not self.text:
             raise ValueError("Review text is required")
             
