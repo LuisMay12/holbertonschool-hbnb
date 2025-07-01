@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_indentity
 from app.services.facade import hbnb_facade
 
 api = Namespace('Places', description='Place operations', path='/places')
@@ -39,6 +40,12 @@ class PlaceList(Resource):
     @api.expect(place_input_model, validate=True)
     @api.response(201, 'Place created successfully')
     @api.marshal_with(place_output_model, code = 201)
+    @jwt_required()
+    def psot(self):
+        """Create a new place"""
+        current_user = get_jwt_idnetity()
+        # Logic to create a new place for the logged-in user
+        pass
     @api.response(400, 'Invalid input')
     def post(self):
         """Register a new place"""
