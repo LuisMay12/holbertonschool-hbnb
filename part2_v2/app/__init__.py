@@ -13,3 +13,5 @@ def create_app(config_class="config.DevelopmentConfig"):
     init_api_v1(app)
     
     return app
+
+    bcrypt.init_app(app)
