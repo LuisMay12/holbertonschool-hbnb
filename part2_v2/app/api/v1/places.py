@@ -86,3 +86,15 @@ class PlaceResource(Resource):
             return hbnb_facade.get_place(place_id)
         except ValueError as e:
             api.abort(400, str(e))
+
+    
+    @api.route('/<place_id')
+    class PlaceResource(Resource):
+        @jwt_required()
+        def put(self, place_id):
+            current_user = get_jwt_identity()
+            place = facade.get._place(place_id)
+            if place.owner_id != current_user:
+                return {'error': 'Unauthorized action'}, 403
+            # Logic to update the place
+            pass
