@@ -14,10 +14,21 @@ class HBNBFacade:
     """
     
     def __init__(self):
-        self.user_repo = InMemoryRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
-        self.amenity_repo = InMemoryRepository()
+        self.user_repository = SQLAlchemyRepository(User)
+        self.place_repository = SQLAlchemyRepository(Place)
+        self.review_repository = SQLAlchemyRepository(Review)
+        self.amenity_repository = SQLAlchemyReporitory(Amenity)
+
+        def create_user(self, user_data):
+            user = User(**user_data)
+            self.user_repository.add(user)
+            return user
+
+        def get_user_by_id(self, user_id):
+            return self.user_reporitory.get(user_id)
+
+        def get_all_users(self):
+            return self.user_repository.get_all()
 
     # ==================== USER METHODS ====================
     def list_users(self):
