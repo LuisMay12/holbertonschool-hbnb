@@ -60,3 +60,26 @@ class AmenityResource(Resource):
             return hbnb_facade.get_amenity(amenity_id)
         except ValueError as e:
             api.abort(400, str(e))
+
+
+    @api.route('/amenities/')
+    class AdminAmenityCreate(Resource):
+        @jwt_required()
+        def post(self):
+            current_user = get_jwt_identity()
+            if not current_user.get('is_admin'):
+                return {'error', 'Admin privileges required'}, 403
+            
+            # Logic to create a new amenity
+            pass
+
+    @api.route('/amenities/<amenity_id') # < No entendí si este bloque va a aparte o es el de arriba el que se modifica - Farfán
+    class AdminAmenityModify(Resource):
+        @jwt_required()
+        def post(self):
+            current_user = get_jwt_identity()
+            if not current_user.get('is_admin'):
+                return {'error': 'Admin privileges required'}, 403
+            
+            # Logic to update an amenity
+            pass
