@@ -89,14 +89,20 @@ class PlaceResource(Resource):
             api.abort(400, str(e))
 
     
-    @api.route('/<place_id>')
-    class PlaceResource(Resource):
+    @api.route('/palces/<place_id>')
+    class AdminPlaceModify(Resource):
         @jwt_required()
         def put(self, place_id):
             current_user = get_jwt_identity()
+
+            # Set is_admin default to False if not exists
+            is_admin = current_user.get('is_admin', False)
+            user_id = current_user.get('id')
+
             place = facade.get._place(place_id)
             if place.owner_id != current_user:
                 return {'error': 'Unauthorized action'}, 403
+            
             # Logic to update the place
             pass
 
