@@ -1,8 +1,9 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_indentity
+from flask_jwt_extended import jwt_required, get_jwt_indentity, get_jwt
 from app.services.facade import hbnb_facade
 
 api = Namespace('Places', description='Place operations', path='/places')
+api = Namespace('admin', description='Admin operations')
 
 # Define the models for related entities
 amenity_model = api.model('PlaceAmenity', {
@@ -88,7 +89,7 @@ class PlaceResource(Resource):
             api.abort(400, str(e))
 
     
-    @api.route('/<place_id')
+    @api.route('/<place_id>')
     class PlaceResource(Resource):
         @jwt_required()
         def put(self, place_id):
@@ -97,4 +98,38 @@ class PlaceResource(Resource):
             if place.owner_id != current_user:
                 return {'error': 'Unauthorized action'}, 403
             # Logic to update the place
+            pass
+
+    @api.route('/users/<user_id>')
+    class AdminUserModify(Resource):
+        @jwt_required()
+        def put(self, user_id):
+            current_user = get_jwt_identity()
+
+            # If 'is_admin' if part of the identity payload
+            if not current_user.get('is_admin'):
+                return {'error': 'Admin privileges required'}, 403
+            
+            data = request.json
+            email = data.get('email')
+
+            if email:
+                # Check if the email is already in use
+                existing_user = facade.get_user_by_email(email)
+                if existing_user and existing_user.id != user_id:
+                    return {'error', 'Email is already in use'}, 400
+                
+            # Logic to update user details, including email and password
+            pass
+
+
+    @api.route('/users/')
+    class AdminUserCreate(Resource):
+        @jwt_required()
+        def post(self):
+            current_user = get_jwt_indentity()
+            if not current_user.get('is_admin'):
+                return {'error', 'Email already registered'}, 400
+            
+            # logic to create a new user
             pass
