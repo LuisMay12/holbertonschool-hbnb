@@ -12,4 +12,4 @@ class Child(db.Model):
     id =Column(Integer, primary_key=True)
     parent_id = Column(Integer, ForeignKey('parents.id'), nullable=False)
 
-    ## Cambiar nombre al archivo
+    # Cambiar nombre al archivo
