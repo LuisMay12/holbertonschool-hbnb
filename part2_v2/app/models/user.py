@@ -1,4 +1,5 @@
 from .base_model import BaseModel
+from flask_jwt_extended import jwt_required
 import re
 from app import db, bcrypt
 import uuid
@@ -53,3 +54,8 @@ class User(BaseModel):
     def full_name(self) -> str:
         """Nombre completo del usuario"""
         return f"{self.first_name} {self.last_name}"
+
+class AdminUserModify(Resource):
+    @jwt_required()
+    def put(self):
+        pass
