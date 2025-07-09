@@ -1,0 +1,44 @@
+---
+title: User
+---
+erDiagram
+    USER {
+        UUID id PK
+        string first_name
+        string last_name
+        string email
+        string password
+        boolean is_admin
+    }
+
+    PLACE {
+        UUID id PK
+        string name
+        string description
+        string city
+        string address
+        UUID user_id FK
+    }
+
+    REVIEW {
+        UUID id PK
+        string text
+        UUID user_id FK
+        UUID place_id FK
+    }
+
+    AMENITY {
+        UUID id PK
+        string name
+    }
+
+    PLACE_AMENITY {
+        UUID place_id PK, FK
+        UUID amenity_id PK, FK
+    }
+
+    USER ||--o{ PLACE : owns
+    USER ||--o{ REVIEW : writes
+    PLACE ||--o{ REVIEW : has
+    PLACE ||--o{ PLACE_AMENITY : links
+    AMENITY ||--o{ PLACE_AMENITY : linked to
