@@ -1,4 +1,5 @@
 from .base_model import BaseModel
+from flask_restx import Resource
 from flask_jwt_extended import jwt_required
 import re
 from app import db, bcrypt
