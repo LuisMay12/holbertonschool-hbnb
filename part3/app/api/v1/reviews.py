@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import hbnb_facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('reviews', description='Review operations', path='/reviews')
 
@@ -23,9 +24,27 @@ class ReviewList(Resource):
     @api.marshal_with(review_output_model, code=201)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
         """Register a new review"""
         data = api.payload
+        
+        current_user = get_jwt_identity()
+        user_id = current_user['id']
+        place = hbnb_facade.get_place(data['place_id'])
+
+        if not place:
+            api.abort(400, "Place does not exist")
+
+        if place['owner_id'] == user_id:
+            api.abort(400, "You cannot review your own place.")
+
+        existing_review = hbnb_facade.get_review_by_user_and_place(user_id, data['place_id'])
+        if existing_review:
+            api.abort(400, "You have already reviewed this place.")
+
+        data['user_id'] = user_id
+        
         try:
             review = hbnb_facade.create_review(data)
             return review, 201
@@ -56,9 +75,19 @@ class ReviewResource(Resource):
     @api.response(200, 'Review updated successfully')
     @api.response(400, 'Invalid input data')
     @api.response(404, 'Review not found')
+    @jwt_required()
     def put(self, review_id):
         """Update a review's information"""
         data = api.payload
+        current_user = get_jwt_identity()
+        review = hbnb_facade.get_review(review_id)
+
+        if not review:
+            api.abort(404, "Review not found")
+
+        if review.user_id != current_user['id']:
+            api.abort(403, "You are not allowed to update this review")
+
         try:
             updated = hbnb_facade.update_review(review_id, data)
             return updated
@@ -67,8 +96,18 @@ class ReviewResource(Resource):
 
     @api.response(200, 'Review deleted successfully')
     @api.response(404, 'Review not found')
+    @jwt_required()
     def delete(self, review_id):
         """Delete a review"""
+        current_user = get_jwt_identity()
+        review = hbnb_facade.get_review(review_id)
+
+        if not review:
+            api.abort(404, "Review not found")
+
+        if review.user_id != current_user['id']:
+            api.abort(403, "You are not allowed to delete this review")
+        
         try:
             hbnb_facade.delete_review(review_id)
             return {"message": "Review deleted successfully"}

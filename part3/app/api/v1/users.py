@@ -1,6 +1,8 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import hbnb_facade
 from app.models.user import User
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 api = Namespace('Users', description='User operations', path='/users')
 
@@ -82,15 +84,23 @@ class UserResource(Resource):
     @api.marshal_with(user_list_model)
     @api.response(400, 'Invalid input')
     @api.response(404, 'User not found')
+    @jwt_required()
     def put(self, user_id):
         """Update user information"""
         data = api.payload
+
+        current_user = get_jwt_identity()
+        if user_id != current_user['id']:
+            api.abort(403, "Unauthorized action")
         
-        # Email validation if its updated
-        if 'email' in data and hbnb_facade.get_user_by_email(data['email']):
-            existing = hbnb_facade.get_user_by_email(data['email'])
-            if existing.id != user_id:
-                api.abort(400, 'Email already registered')
+        # Email validation if its updated // no longer available
+        # if 'email' in data and hbnb_facade.get_user_by_email(data['email']):
+        #     existing = hbnb_facade.get_user_by_email(data['email'])
+        #     if existing.id != user_id:
+        #         api.abort(400, 'Email already registered')
+        
+        if 'email' in data or 'password' in data:
+            api.abort(400, "You cannot modify email or password.")
                 
         try:
             hbnb_facade.update_user(

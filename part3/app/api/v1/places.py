@@ -1,5 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import hbnb_facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 api = Namespace('Places', description='Place operations', path='/places')
 
@@ -23,7 +25,6 @@ place_input_model = api.model('PlaceInput', {
     'price': fields.Float(required=True, description='Price per night'),
     'latitude': fields.Float(required=True, description='Latitude'),
     'longitude': fields.Float(required=True, description='Longitude'),
-    'owner_id': fields.String(required=True, description='Owner ID'),
     'amenities': fields.List(fields.String, required=True, description="List of Amenity IDs")
 })
 
@@ -36,6 +37,7 @@ place_output_model = api.inherit('PlaceOutput', place_input_model, {
 
 @api.route('/')
 class PlaceList(Resource):
+    @jwt_required()
     @api.expect(place_input_model, validate=True)
     @api.response(201, 'Place created successfully')
     @api.marshal_with(place_output_model, code = 201)
@@ -43,6 +45,8 @@ class PlaceList(Resource):
     def post(self):
         """Register a new place"""
         data = api.payload
+        current_user = get_jwt_identity()
+        data['owner_id'] = current_user['id']
         try:
             place = hbnb_facade.create_place(data)
             return place, 201
@@ -71,9 +75,19 @@ class PlaceResource(Resource):
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input')
+    @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
         data = api.payload
+        
+        current_user = get_jwt_identity()
+        place = hbnb_facade.get_place(place_id)
+
+        if not place:
+            api.abort(404, "Place not found")
+
+        if place['owner_id'] != current_user['id']:
+            api.abort(403, "Unauthorized action")
         try:
             hbnb_facade.update_place(place_id, data)
             return hbnb_facade.get_place(place_id)

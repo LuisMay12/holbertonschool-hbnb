@@ -267,5 +267,14 @@ class HBNBFacade:
     
         amenity.name = name
         self.amenity_repo.update(amenity.id, amenity.__dict__)
+    
+    def get_review_by_user_and_place(self, user_id, place_id):
+        """Return the review written by a specific user for a specific place, if it exists"""
+        all_reviews = self.review_repo.get_all()
+        for review in all_reviews:
+            if review.user_id == user_id and review.place_id == place_id:
+                return review
+        return None
+    
 # Singleton pattern for facade
 hbnb_facade = HBNBFacade()
