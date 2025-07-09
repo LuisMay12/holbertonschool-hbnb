@@ -86,10 +86,33 @@ class PlaceResource(Resource):
         if not place:
             api.abort(404, "Place not found")
 
-        if place['owner_id'] != current_user['id']:
+        is_admin = current_user.get('is_admin', False)
+        if not is_admin and place['owner_id'] != current_user['id']:
             api.abort(403, "Unauthorized action")
         try:
             hbnb_facade.update_place(place_id, data)
             return hbnb_facade.get_place(place_id)
+        except ValueError as e:
+            api.abort(400, str(e))
+    
+    @api.response(204, 'Place deleted successfully')
+    @api.response(404, 'Place not found')
+    @api.response(403, 'Unauthorized action')
+    @jwt_required()
+    def delete(self, place_id):
+        """Delete a place (owner or admin only)"""
+        current_user = get_jwt_identity()
+        place = hbnb_facade.get_place(place_id)
+
+        if not place:
+            api.abort(404, "Place not found")
+
+        is_admin = current_user.get('is_admin', False)
+        if not is_admin and place['owner_id'] != current_user['id']:
+            api.abort(403, "Unauthorized action")
+
+        try:
+            hbnb_facade.delete_place(place_id)
+            return '', 204
         except ValueError as e:
             api.abort(400, str(e))

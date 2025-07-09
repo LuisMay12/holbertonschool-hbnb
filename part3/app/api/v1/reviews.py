@@ -85,8 +85,11 @@ class ReviewResource(Resource):
         if not review:
             api.abort(404, "Review not found")
 
-        if review.user_id != current_user['id']:
-            api.abort(403, "You are not allowed to update this review")
+        current_user = get_jwt_identity()
+        is_admin = current_user.get('is_admin', False)
+
+        if review.user_id != current_user['id'] and not is_admin:
+            api.abort(403, 'Unauthorized')
 
         try:
             updated = hbnb_facade.update_review(review_id, data)
@@ -105,8 +108,11 @@ class ReviewResource(Resource):
         if not review:
             api.abort(404, "Review not found")
 
-        if review.user_id != current_user['id']:
-            api.abort(403, "You are not allowed to delete this review")
+        current_user = get_jwt_identity()
+        is_admin = current_user.get('is_admin', False)
+
+        if review.user_id != current_user['id'] and not is_admin:
+            api.abort(403, 'Unauthorized')
         
         try:
             hbnb_facade.delete_review(review_id)

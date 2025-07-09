@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import hbnb_facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('Amenities', description='Amenities operations', path='/amenities')
 
@@ -18,9 +19,15 @@ class AmenityList(Resource):
 
     @api.expect(amenity_model, validate=True)
     @api.marshal_with(amenity_model, code=201)
-    @api.response(400, 'Nombre inválido o duplicado')
+    @api.response(400, 'Invalid or duplicate name')
+    @jwt_required()
     def post(self):
-        """Register a new amenity"""
+        """Create a new amenity (admin only)"""
+        current_user = get_jwt_identity()
+
+        if not current_user.get('is_admin'):
+            api.abort(403, 'Admin privileges required')
+
         data = api.payload
         
         # Validación de nombre único
@@ -37,7 +44,7 @@ class AmenityList(Resource):
 @api.route('/<string:amenity_id>')
 class AmenityResource(Resource):
     @api.marshal_with(amenity_model)
-    @api.response(404, 'Comodidad no encontrada')
+    @api.response(404, 'Amenity not found')
     def get(self, amenity_id):
         """Retrieve an amenity by ID"""
         amenity = hbnb_facade.get_amenity(amenity_id)
@@ -47,10 +54,15 @@ class AmenityResource(Resource):
 
     @api.expect(amenity_model)
     @api.marshal_with(amenity_model)
-    @api.response(400, 'Nombre inválido')
-    @api.response(404, 'Comodidad no encontrada')
+    @api.response(400, 'Invalid name')
+    @api.response(404, 'Amenity not found')
+    @jwt_required()
     def put(self, amenity_id):
-        """Update an amenity's information"""
+        """Update an amenity (admin only)"""
+        current_user = get_jwt_identity()
+        if not current_user.get('is_admin'):
+            api.abort(403, 'Admin privileges required')
+        
         data = api.payload
         try:
             hbnb_facade.update_amenity(

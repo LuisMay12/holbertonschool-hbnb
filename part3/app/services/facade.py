@@ -148,6 +148,14 @@ class HBNBFacade:
         return place
 
 
+    def delete_place(self, place_id):
+        place = self.get_place(place_id)
+        if not place:
+            raise ValueError("Place not found")
+        self.place_repo.delete(place_id)
+        self.place_repo.save()
+
+
     # def get_places_by_user(self, user_id): # maybe it is not needed
     #     """Obtiene todos los alojamientos de un usuario"""
     #     return [p for p in self.place_repo.get_all() if p.user_id == user_id]
