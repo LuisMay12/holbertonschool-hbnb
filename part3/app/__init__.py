@@ -23,4 +23,8 @@ def create_app(config_class="config.DevelopmentConfig"):
     jwt.init_app(app)
     db.init_app(app)
     
+    # Initialize the database when running the app
+    with app.app_context():
+        db.create_all()  # Create database tables based on models
+    
     return app

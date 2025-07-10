@@ -3,7 +3,7 @@ from app.models.user import User
 from app.models.place import Place
 from app.models.review import Review
 from app.models.amenity import Amenity
-from app.persistence.repository import SQLAlchemyRepository
+# from app.persistence.repository import SQLAlchemyRepository
 from app.services.repositories.user_repository import UserRepository
 
 class HBNBFacade:
@@ -15,7 +15,7 @@ class HBNBFacade:
     - Amenities (comodidades)
     """
     def __init__(self):
-        self.user_repo = SQLAlchemyRepository(User)
+        # self.user_repo = SQLAlchemyRepository(User)
         self.user_repo = UserRepository()
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
@@ -30,6 +30,7 @@ class HBNBFacade:
         user = User(**user_data)
         user.hash_password(user_data['password'])
         self.user_repo.add(user) # Task 07
+        return user
 
     def get_user(self, user_id):
         return self.user_repo.get(user_id) # Task 07
@@ -37,33 +38,33 @@ class HBNBFacade:
     def get_user_by_email(self, email):
         return self.user_repo.get_user_by_email(email) # Task 07
 
-    def create_user(self, email, first_name, last_name, password='', is_admin=False):
-        """Create new user with validation"""
-        if self.user_repo.get_by_attribute('email', email):
-            raise ValueError("Email is already in use")
+    # def create_user(self, email, first_name, last_name, password='', is_admin=False):
+    #     """Create new user with validation"""
+    #     if self.user_repo.get_by_attribute('email', email):
+    #         raise ValueError("Email is already in use")
 
-        user = User(
-        email=email,
-        first_name=first_name,
-        last_name=last_name,
-        password=password,  # Will be hashed later
-        is_admin=is_admin
-        )
-        self.user_repo.add(user)
-        return user
-        # Only allows updated fields
-        # allowed_fields = ['email', 'first_name', 'last_name', 'is_admin']
-        # updates = {k: v for k, v in kwargs.items() if k in allowed_fields and v is not None}
-        # user.update(updates)
-        # self.user_repo.update(user.id, user.__dict__) 
+    #     user = User(
+    #     email=email,
+    #     first_name=first_name,
+    #     last_name=last_name,
+    #     password=password,  # Will be hashed later
+    #     is_admin=is_admin
+    #     )
+    #     self.user_repo.add(user)
+    #     return user
+    #     # Only allows updated fields
+    #     # allowed_fields = ['email', 'first_name', 'last_name', 'is_admin']
+    #     # updates = {k: v for k, v in kwargs.items() if k in allowed_fields and v is not None}
+    #     # user.update(updates)
+    #     # self.user_repo.update(user.id, user.__dict__) 
 
-    def get_user(self, user_id):
-        """Obtiene un usuario por ID"""
-        return self.user_repo.get(user_id)
+    # def get_user(self, user_id):
+    #     """Obtiene un usuario por ID"""
+    #     return self.user_repo.get(user_id)
 
-    def get_user_by_email(self, email):
-        """Obtiene un usuario por email"""
-        return self.user_repo.get_by_attribute('email', email)
+    # def get_user_by_email(self, email):
+    #     """Obtiene un usuario por email"""
+    #     return self.user_repo.get_by_attribute('email', email)
 
     def update_user(self, user_id, **kwargs):
         """Actualiza atributos de un usuario"""

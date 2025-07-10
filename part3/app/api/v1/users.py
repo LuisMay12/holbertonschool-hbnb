@@ -62,13 +62,17 @@ class UserList(Resource):
             api.abort(400, 'Email already registered')
             
         try:
-            user = hbnb_facade.create_user(
-                email=data['email'],
-                first_name=data['first_name'],
-                last_name=data['last_name'],
-                password=data.get('password', ''),
-                is_admin=data.get('is_admin', False)
-            )
+            """If we use it like below we get an error"""
+            
+            # user = hbnb_facade.create_user(
+            #     email=data['email'],
+            #     first_name=data['first_name'],
+            #     last_name=data['last_name'],
+            #     password=data.get('password', ''),
+            #     is_admin=data.get('is_admin', False)
+            # )
+            
+            user = hbnb_facade.create_user(data)
             return user, 201
         except ValueError as e:
             api.abort(400, str(e))
