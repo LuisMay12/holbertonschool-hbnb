@@ -1,8 +1,16 @@
 import uuid
 from datetime import datetime
 from typing import Dict, Any
+from app import db
+from datetime import datetime
 
-class BaseModel:
+class BaseModel(db.Model):
+    __abstract__ = True # The new changes
+
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at =db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
     """Base class with UUID and timestamp handling"""
     
     def __init__(self, *args, **kwargs):

@@ -4,6 +4,7 @@ from app.models.place import Place
 from app.models.review import Review
 from app.models.amenity import Amenity
 from app.persistence.repository import SQLAlchemyRepository
+from app.services.repositories.user_repository import UserRepository
 
 class HBNBFacade:
     """
@@ -13,9 +14,9 @@ class HBNBFacade:
     - Reviews (reseñas)
     - Amenities (comodidades)
     """
-    
     def __init__(self):
         self.user_repo = SQLAlchemyRepository(User)
+        self.user_repo = UserRepository()
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
@@ -24,6 +25,17 @@ class HBNBFacade:
     def list_users(self):
         """List all users (without sensitive data)"""
         return self.user_repo.get_all()
+    
+    def create_user(self, user_data):
+        user = User(**user_data)
+        user.hash_password(user_data['password'])
+        self.user_repo.add(user) # Task 07
+
+    def get_user(self, user_id):
+        return self.user_repo.get(user_id) # Task 07
+    
+    def get_user_by_email(self, email):
+        return self.user_repo.get_user_by_email(email) # Task 07
 
     def create_user(self, email, first_name, last_name, password='', is_admin=False):
         """Create new user with validation"""
