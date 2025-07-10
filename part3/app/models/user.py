@@ -1,7 +1,8 @@
 from .base_model import BaseModel
 from app import bcrypt, db
 import re
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
+from sqlalchemy import Column, Integer, String, ForeignKey
 
 class User(BaseModel):
     __tablename__ = 'users' # New changes
@@ -11,6 +12,9 @@ class User(BaseModel):
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+
+    places = db.relationship('Place', backref='owner', lazy=True)
+    reviews = db.relationship('Review', backref='author', lazy=True)
     
     """User model with strict validations"""
     

@@ -1,5 +1,7 @@
 from .base_model import BaseModel
 from app import db
+from sqlalchemy import Table, Column, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 
 class Review(db.Model):
     __tablename__ = 'reviews'
@@ -8,6 +10,8 @@ class Review(db.Model):
     text = db.Column(db.String(1024), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
 
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)
     """Review template with rating validation"""
     
     def __init__(self, *args, **kwargs):
