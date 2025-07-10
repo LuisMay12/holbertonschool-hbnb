@@ -1,6 +1,13 @@
 from .base_model import BaseModel
+from app import db
 
-class Review(BaseModel):
+class Review(db.Model):
+    __tablename__ = 'reviews'
+
+    id = db.Column(db.integer, primary_key=True)
+    text = db.Column(db.String(1024), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+
     """Review template with rating validation"""
     
     def __init__(self, *args, **kwargs):

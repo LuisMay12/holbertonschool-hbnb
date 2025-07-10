@@ -1,6 +1,11 @@
 from .base_model import BaseModel
+from app import db
 
-class Amenity(BaseModel):
+class Amenity(db.Model):
+    __tablename__ = 'amenities'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__()

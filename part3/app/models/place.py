@@ -1,7 +1,16 @@
 from .base_model import BaseModel
 from typing import List
+from app import db
 
-class Place(BaseModel):
+class Place(db.Model):
+    __tablename__ = 'places'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(128), nullable=False)
+    description = db.Column(db.String(512), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
     """Place model with geospatial relationships and validations"""
     
     def __init__(self, *args, **kwargs):
