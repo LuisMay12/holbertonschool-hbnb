@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Holberton HBNB - Places</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="logo.png" type="image/png" />
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <img src="logo.png" alt="Logo" class="logo" />
+      <a href="login.html" class="login-button">Login</a>
+    </div>
+  </header>
+
+  <main>
+    <h1>Beautiful Beach House</h1>
+
+    <section class="place-details">
+      <div class="place-info">
+        <p><strong>Host:</strong> John Doe</p>
+        <p><strong>Price per night:</strong> $150</p>
+        <p><strong>Description:</strong> A beautiful beach house with amazing views...</p>
+        <p><strong>Amenities:</strong> WiFi, Pool, Air Conditioning</p>
+      </div>
+    </section>
+
+    <section class="reviews">
+      <h2 class="review-h2">Reviews</h2>
+
+      <div class="review-card">
+        <p><strong>Jane Smith:</strong></p>
+        <p>Great place to stay!</p>
+        <p>Rating: ★★★★☆</p>
+      </div>
+
+      <div class="review-card">
+        <p><strong>Robert Brown:</strong></p>
+        <p>Amazing location and very comfortable.</p>
+        <p>Rating: ★★★★★</p>
+      </div>
+    </section>
+
+    <section class="add-review">
+        <h2 class="review-h2">Add a Review</h2>
+        <form class="form">
+         <label for="review">Your Review:</label>
+           <textarea id="review" name="review" rows="4" required></textarea>
+
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating" required>
+          <option value="1">1 Star</option>
+          <option value="2">2 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="5">5 Stars</option>
+        </select>
+
+        <button type="submit">Submit Review</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2024 HBnB Evolution. All rights reserved.</p>
+  </footer>
+</body>
+</html>
