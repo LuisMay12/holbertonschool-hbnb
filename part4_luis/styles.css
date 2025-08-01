@@ -1,0 +1,148 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f2f2f2;
+  color: #000;
+  line-height: 1.6;
+}
+
+/* Header */
+header {
+  background-color: #ff9900;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.logo {
+  height: 40px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.login-button {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Footer */
+footer {
+  background-color: #ff9900;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+/* Main content spacing */
+main {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Headings */
+h2, h3 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Cards (Places and Reviews) */
+.place-card,
+.review-card,
+.place-details {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 20px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Place cards grid */
+#places-list {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Place card individual */
+.place-card {
+  width: 250px;
+  text-align: center;
+}
+
+.details-button,
+form button {
+  display: inline-block;
+  text-decoration: none;
+  background-color: #ff9900;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 5px;
+  margin-top: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.details-button:hover,
+form button:hover {
+  background-color: #e88b00;
+}
+
+
+/* Review form and inputs */
+form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+form textarea,
+form select,
+form input[type="email"],
+form input[type="password"] {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+form {
+  margin-top: 1rem;
+}
+
+.add-review {
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  #places-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .place-card {
+    width: 90%;
+  }
+}
